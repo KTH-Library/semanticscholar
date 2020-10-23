@@ -1,0 +1,69 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# semanticscholar
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+<!-- badges: end -->
+
+The goal of `semanticscholar` is to offer data access to data from Semantic Scholar through their lightweight API which can provide data on publications and authors.
+
+## Installation
+
+You can install the current version of `semanticscholar` from [GitHub](https://github.com/kth-library/semanticscholar) with:
+
+``` r
+#install.packages("devtools")
+devtools::install_github("kth-library/semanticscholar", dependencies = TRUE)
+```
+
+## Example
+
+This is a basic example which shows you how to get information for papers and authors:
+
+```{r example}
+library(semanticscholar)
+library(dplyr)
+library(purrr)
+
+# get a paper using an identifier
+paper <- S2_paper("arXiv:1705.10311", include_unknown_refs = TRUE)
+
+# find authors on that paper
+authors <- 
+  paper$authors %>% map_df(as_tibble)
+
+authors
+
+# for one of the authors
+author_ids <- authors$authorId
+author <- S2_author(author_ids[1])
+
+# list all the papers
+papers <- 
+  author$papers %>% 
+  map_df(as_tibble) %>% 
+  select(title, year)
+
+knitr::kable(papers %>% head(5))
+
+```
+
+## Data source attribution
+
+When data from `semanticscholar` is displayed publicly, this attribution also needs to be displayed:
+
+`r S2_attribution()`
