@@ -32,4 +32,12 @@ Example of Accessible Paper Identifiers:
 \item PubMed ID : PMID:19872477
 \item Corpus ID : CorpusID:37220927
 }
+
+S2 is an abbreviation for Semantic Scholar
+MAG is an abbreviation for Microsoft Academic Graph
+}
+\examples{
+\dontrun{
+ S2_paper("fb5d1bb23724d9a5a5eae036a2e3cf291cac2c1b")
+ }
 }

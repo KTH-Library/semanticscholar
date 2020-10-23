@@ -25,3 +25,8 @@ Example of Accessible Paper Identifiers:
 \item S2 Author ID : 1741101
 }
 }
+\examples{
+\dontrun{
+ S2_author(1741101)
+ }
+}
