@@ -2,9 +2,7 @@
 % Please edit documentation in R/api.R
 \name{S2_author}
 \alias{S2_author}
-\title{Retrieve author information
-This function retrieves Semantic Scholar data for
-an author given the S2Author identifier}
+\title{Retrieve author information}
 \usage{
 S2_author(S2AuthorId)
 }
@@ -15,7 +13,6 @@ S2_author(S2AuthorId)
 list representing author object
 }
 \description{
-Retrieve author information
 This function retrieves Semantic Scholar data for
 an author given the S2Author identifier
 }
@@ -24,4 +21,9 @@ Example of Accessible Paper Identifiers:
 \itemize{
 \item S2 Author ID : 1741101
 }
+}
+\examples{
+\dontrun{
+ S2_author(1741101)
+ }
 }

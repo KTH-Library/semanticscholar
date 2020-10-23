@@ -1,6 +1,10 @@
 S2_api <- function()
   "https://api.semanticscholar.org/"
 
+# min interval in seconds betw requests against the API
+S2_ratelimit <- function()
+  round((5 * 60) / (100 - 1), digits = 2)
+
 #' Attribution
 #'
 #' Use this attribution whenever data from the API is publicly displayed
@@ -19,6 +23,7 @@ S2_attribution <- function() {
 }
 
 #' Retrieve paper information
+#'
 #' This function retrieves Semantic Scholar data for a paper
 #' given its identifier
 #' @param identifier string with identifier
@@ -32,8 +37,16 @@ S2_attribution <- function() {
 #' - ACL ID : ACL:W12-3903
 #' - PubMed ID : PMID:19872477
 #' - Corpus ID : CorpusID:37220927
+#'
+#' S2 is an abbreviation for Semantic Scholar
+#' MAG is an abbreviation for Microsoft Academic Graph
+#'
 #' @return list representing S2 paper object
-#' @importFrom httr GET
+#' @examples
+#' \dontrun{
+#'  S2_paper("fb5d1bb23724d9a5a5eae036a2e3cf291cac2c1b")
+#'  }
+#' @importFrom httr GET content status_code
 #' @export
 S2_paper <- function(identifier, include_unknown_refs = FALSE) {
 
@@ -45,9 +58,14 @@ S2_paper <- function(identifier, include_unknown_refs = FALSE) {
   res <- httr::GET(url = S2_api(),
     path = sprintf("v1/paper/%s", identifier), query = q)
 
-  x <- httr::content(res)
+  if (status_code(res) == 200)
+    return(httr::content(res))
 
-  x
+  if (status_code(res) == 429)
+    stop("HTTP status 429 Too Many Requests (> 100 in 5 mins). Please wait 5 minutes.")
+
+  stop("HTTP status", status_code(res))
+
   # list(
   #   abstract = purrr::pluck(x, "abstract"),
   #   authors = purrr::pluck(x, "authors") %>% purrr::map_df(dplyr::as_tibble),
@@ -57,6 +75,7 @@ S2_paper <- function(identifier, include_unknown_refs = FALSE) {
 
 
 #' Retrieve author information
+#'
 #' This function retrieves Semantic Scholar data for
 #' an author given the S2Author identifier
 #' @param S2AuthorId string with author identifier
@@ -64,7 +83,11 @@ S2_paper <- function(identifier, include_unknown_refs = FALSE) {
 #' Example of Accessible Paper Identifiers:
 #' - S2 Author ID : 1741101
 #' @return list representing author object
-#' @importFrom httr GET
+#' @examples
+#' \dontrun{
+#'  S2_author(1741101)
+#'  }
+#' @importFrom httr GET status_code content
 #' @export
 S2_author <- function(S2AuthorId) {
 
@@ -73,6 +96,13 @@ S2_author <- function(S2AuthorId) {
   res <- httr::GET(url = S2_api(),
     path = sprintf("v1/author/%s", identifier))
 
-  httr::content(res)
+  if (status_code(res) == 200)
+    return(httr::content(res))
+
+  if (status_code(res) == 429)
+    stop("HTTP status 429 Too Many Requests (> 100 in 5 mins). Please wait 5 minutes.")
+
+  stop("HTTP status", status_code(res))
 
 }
+

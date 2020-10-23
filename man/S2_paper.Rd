@@ -2,9 +2,7 @@
 % Please edit documentation in R/api.R
 \name{S2_paper}
 \alias{S2_paper}
-\title{Retrieve paper information
-This function retrieves Semantic Scholar data for a paper
-given its identifier}
+\title{Retrieve paper information}
 \usage{
 S2_paper(identifier, include_unknown_refs = FALSE)
 }
@@ -17,7 +15,6 @@ S2_paper(identifier, include_unknown_refs = FALSE)
 list representing S2 paper object
 }
 \description{
-Retrieve paper information
 This function retrieves Semantic Scholar data for a paper
 given its identifier
 }
@@ -32,4 +29,12 @@ Example of Accessible Paper Identifiers:
 \item PubMed ID : PMID:19872477
 \item Corpus ID : CorpusID:37220927
 }
+
+S2 is an abbreviation for Semantic Scholar
+MAG is an abbreviation for Microsoft Academic Graph
+}
+\examples{
+\dontrun{
+ S2_paper("fb5d1bb23724d9a5a5eae036a2e3cf291cac2c1b")
+ }
 }
