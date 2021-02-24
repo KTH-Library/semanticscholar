@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-The goal of `semanticscholar` is to offer data access to data from Semantic Scholar through their lightweight API which can provide data on publications and authors.
+The goal of `semanticscholar` is to offer data access to data from Semantic Scholar through their lightweight API which can provide data on publications and authors. Semantic Scholar is a free, non-profit academic search and discovery engine whose mission is to empower researchers.
 
 ## Installation
 
@@ -35,30 +35,37 @@ devtools::install_github("kth-library/semanticscholar", dependencies = TRUE)
 This is a basic example which shows you how to get information for papers and authors:
 
 ```{r example}
+
 library(semanticscholar)
 library(dplyr)
-library(purrr)
+suppressPackageStartupMessages(library(purrr))
+library(knitr)
 
 # get a paper using an identifier
 paper <- S2_paper("arXiv:1705.10311", include_unknown_refs = TRUE)
 
-# find authors on that paper
-authors <- 
-  paper$authors %>% map_df(as_tibble)
-
-authors
+# authors on that paper
+authors <- paper$authors
 
 # for one of the authors
 author_ids <- authors$authorId
 author <- S2_author(author_ids[1])
 
-# list all the papers
+# list some of the papers
 papers <- 
   author$papers %>% 
-  map_df(as_tibble) %>% 
   select(title, year)
 
-knitr::kable(papers %>% head(5))
+papers %>% head(5) %>% knitr::kable()
+
+# get data from several identifiers for importing into Zotero
+ids <- c("10.1038/nrn3241", "CorpusID:37220927")
+my_refs <- zotero_references(ids)
+
+# this data can now be imported via the Zetero API using https://github.com/giocomai/zoteroR
+# showing data form the first record
+my_refs[[1]]$journalArticle %>% glimpse()
+my_refs[[2]]$creators %>% knitr::kable()
 
 ```
 

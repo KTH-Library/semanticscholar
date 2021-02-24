@@ -47,6 +47,7 @@ S2_attribution <- function() {
 #'  S2_paper("fb5d1bb23724d9a5a5eae036a2e3cf291cac2c1b")
 #'  }
 #' @importFrom httr GET content status_code
+#' @importFrom jsonlite fromJSON
 #' @export
 S2_paper <- function(identifier, include_unknown_refs = FALSE) {
 
@@ -58,8 +59,14 @@ S2_paper <- function(identifier, include_unknown_refs = FALSE) {
   res <- httr::GET(url = S2_api(),
     path = sprintf("v1/paper/%s", identifier), query = q)
 
-  if (status_code(res) == 200)
-    return(httr::content(res))
+  if (status_code(res) == 200) {
+    res <- jsonlite::fromJSON(
+      httr::content(res, as = "text", encoding = "utf-8"),
+      simplifyDataFrame = TRUE
+    )
+    class(res$references) <- c("tbl_df", "tbl", "data.frame")
+    return(res)
+  }
 
   if (status_code(res) == 429)
     stop("HTTP status 429 Too Many Requests (> 100 in 5 mins). Please wait 5 minutes.")
@@ -88,6 +95,7 @@ S2_paper <- function(identifier, include_unknown_refs = FALSE) {
 #'  S2_author(1741101)
 #'  }
 #' @importFrom httr GET status_code content
+#' @importFrom jsonlite fromJSON
 #' @export
 S2_author <- function(S2AuthorId) {
 
@@ -97,7 +105,7 @@ S2_author <- function(S2AuthorId) {
     path = sprintf("v1/author/%s", identifier))
 
   if (status_code(res) == 200)
-    return(httr::content(res))
+    return(jsonlite::fromJSON(httr::content(res, as = "text", encoding = "utf-8")))
 
   if (status_code(res) == 429)
     stop("HTTP status 429 Too Many Requests (> 100 in 5 mins). Please wait 5 minutes.")
