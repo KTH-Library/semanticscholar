@@ -16,7 +16,10 @@ test_that("Getting data for some papers works", {
     "CorpusID:37220927"
   )
 
-  pid <- function(x) S2_paper(x)$paperId
+  pid <- function(x) {
+    Sys.sleep(S2_ratelimit())
+    S2_paper(x)$paperId
+  }
   ids <- vapply(identifiers, pid, character(1))
   is_valid <- all(nchar(ids) == 40)
 

@@ -23,6 +23,8 @@ zotero_references <- function(identifiers) {
 
     p1 <- S2_paper(identifier)
 
+    Sys.sleep(S2_ratelimit())
+
     journalArticle <-
       with(p1, dplyr::tibble(
         title = title,

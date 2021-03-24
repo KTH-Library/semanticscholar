@@ -1,9 +1,40 @@
-S2_api <- function()
-  "https://api.semanticscholar.org/"
+#file.edit("~/.Renviron")
+#readRenviron("~/.Renviron")
 
-# min interval in seconds betw requests against the API
+cfg <- function() {
+
+  res <- list(
+    S2_api = "https://api.semanticscholar.org/",
+    S2_ratelimit = round((5 * 60) / (100 - 1), digits = 2)
+  )
+
+  if (Sys.getenv("SEMANTICSCHOLAR_API") != "") {
+    res$S2_key <- Sys.getenv("SEMANTICSCHOLAR_API")
+    res$S2_api <- "https://partner.semanticscholar.org/"
+    res$S2_ratelimit <- 1 / (100 - 1) # for approx 100 requests per second
+  }
+
+  return (res)
+}
+
+#' Endpoint used for requests to Semantic Scholar API
+#'
+#' When environment variable SEMANTICSCHOLAR_API is set to a valid API key this
+#' value differs as endpoints allowing higher rate limits are being used.
+#' @export
+S2_api <- function()
+  cfg()$S2_api
+
+#' Rate limit for API calls
+#'
+#' The minimum interval in seconds between requests to the API.
+#'
+#' When environment variable SEMANTICSCHOLAR_API is set to a valid API key this
+#' value can be approx 0.01 (for 100 requests per second) but if no API key is
+#' used, the default value will be around 3.5 (allowing a maximum of 100 requests per 5 minutes)
+#' @export
 S2_ratelimit <- function()
-  round((5 * 60) / (100 - 1), digits = 2)
+  cfg()$S2_ratelimit
 
 #' Attribution
 #'
@@ -18,7 +49,7 @@ S2_ratelimit <- function()
 #' @export
 S2_attribution <- function() {
   sprintf(
-    "Data source: Semantic Scholar API\n%s?utm_source=api\n%s", S2_api(),
+    "Data source: Semantic Scholar API\n%s?utm_source=api\n%s", S2_api(), "\n",
     "Data license agreement: http://s2-public-api-prod.us-west-2.elasticbeanstalk.com/license/")
 }
 
@@ -56,8 +87,16 @@ S2_paper <- function(identifier, include_unknown_refs = FALSE) {
   if (include_unknown_refs)
     q <- list(include_unknown_refs = "true")
 
-  res <- httr::GET(url = S2_api(),
-    path = sprintf("v1/paper/%s", identifier), query = q)
+  key <- cfg()$S2_key
+  api <- S2_api()
+
+  if (!is.null(key) && nchar(key) > 10) {
+    res <- httr::GET(url = api, httr::add_headers(`x-api-key` = key),
+      path = sprintf("v1/paper/%s", identifier), query = q)
+  } else {
+    res <- httr::GET(url = api,
+      path = sprintf("v1/paper/%s", identifier), query = q)
+  }
 
   if (status_code(res) == 200) {
     res <- jsonlite::fromJSON(
@@ -100,9 +139,16 @@ S2_paper <- function(identifier, include_unknown_refs = FALSE) {
 S2_author <- function(S2AuthorId) {
 
   identifier <- S2AuthorId
+  key <- cfg()$S2_key
+  api <- S2_api()
 
-  res <- httr::GET(url = S2_api(),
-    path = sprintf("v1/author/%s", identifier))
+  if (!is.null(key) && nchar(key) > 10) {
+    res <- httr::GET(url = api, httr::add_headers(`x-api-key` = key),
+                     path = sprintf("v1/author/%s", identifier))
+  } else {
+    res <- httr::GET(url = S2_api(),
+                     path = sprintf("v1/author/%s", identifier))
+  }
 
   if (status_code(res) == 200)
     return(jsonlite::fromJSON(httr::content(res, as = "text", encoding = "utf-8")))

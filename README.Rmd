@@ -69,8 +69,22 @@ my_refs[[2]]$creators %>% knitr::kable()
 
 ```
 
+## Rate limits and endpoints
+
+By default the rate limit allows 100 request per 5 minute period. This allows for making new requests every 3-4 seconds.
+
+By requesting an API key from Semantic Scholar, this rate can be faster, such as 100 requests per second. If you want to use an API key provided by Semantic Scholar, then edit the `~/.Renviron` file to add the key as a value for an environment variable `SEMANTICSCHOLAR_API`. This R package will then use API endpoints which are faster, with higher rate limits than the regular API endpoints.
+
+The rate limit and API base URL endpoint can be verified:
+
+```{r ratelimit}
+S2_api()
+S2_ratelimit()
+```
+
 ## Data source attribution
 
 When data from `semanticscholar` is displayed publicly, this attribution also needs to be displayed:
 
 `r S2_attribution()`
+

@@ -91,8 +91,7 @@
 <a href="#example" class="anchor"></a>Example</h2>
 <p>This is a basic example which shows you how to get information for papers and authors:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KTH-Library/semanticscholar">semanticscholar</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KTH-Library/semanticscholar">semanticscholar</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Attaching package: 'dplyr'</span>
@@ -123,8 +122,8 @@
 <span class="va">papers</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="96%">
-<col width="3%">
+<col width="94%">
+<col width="5%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">title</th>
@@ -154,8 +153,7 @@
 </tbody>
 </table>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co"># get data from several identifiers for importing into Zotero</span>
+<code class="sourceCode R"><span class="co"># get data from several identifiers for importing into Zotero</span>
 <span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"10.1038/nrn3241"</span>, <span class="st">"CorpusID:37220927"</span><span class="op">)</span>
 <span class="va">my_refs</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/zotero_references.html">zotero_references</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span>
 
@@ -206,11 +204,23 @@
 </tbody>
 </table>
 </div>
+<div id="rate-limits-and-endpoints" class="section level2">
+<h2 class="hasAnchor">
+<a href="#rate-limits-and-endpoints" class="anchor"></a>Rate limits and endpoints</h2>
+<p>By default the rate limit allows 100 request per 5 minute period. This allows for making new requests every 3-4 seconds.</p>
+<p>By requesting an API key from Semantic Scholar, this rate can be faster, such as 100 requests per second. If you want to use an API key provided by Semantic Scholar, then edit the <code>~/.Renviron</code> file to add the key as a value for an environment variable <code>SEMANTICSCHOLAR_API</code>. This R package will then use API endpoints which are faster, with higher rate limits than the regular API endpoints.</p>
+<p>The rate limit and API base URL endpoint can be verified:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/S2_api.html">S2_api</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; [1] "https://partner.semanticscholar.org/"</span>
+<span class="fu"><a href="reference/S2_ratelimit.html">S2_ratelimit</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; [1] 0.01010101</span></code></pre></div>
+</div>
 <div id="data-source-attribution" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data-source-attribution" class="anchor"></a>Data source attribution</h2>
 <p>When data from <code>semanticscholar</code> is displayed publicly, this attribution also needs to be displayed:</p>
-<p>Data source: Semantic Scholar API <a href="https://api.semanticscholar.org/?utm_source=api" class="uri">https://api.semanticscholar.org/?utm_source=api</a> Data license agreement: <a href="http://s2-public-api-prod.us-west-2.elasticbeanstalk.com/license/" class="uri">http://s2-public-api-prod.us-west-2.elasticbeanstalk.com/license/</a></p>
+<p>Data source: Semantic Scholar API <a href="https://partner.semanticscholar.org/?utm_source=api" class="uri">https://partner.semanticscholar.org/?utm_source=api</a></p>
 </div>
 </div>
   </div>
