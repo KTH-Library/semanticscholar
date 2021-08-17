@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Attribution — S2_attribution • semanticscholar</title>
+<title>This function retrieves Semantic Scholar data for
+a keyword search — S2_search_papers • semanticscholar</title>
 
 
 <!-- jquery -->
@@ -39,8 +40,10 @@
 
 
 
-<meta property="og:title" content="Attribution — S2_attribution" />
-<meta property="og:description" content="Use this attribution whenever data from the API is publicly displayed" />
+<meta property="og:title" content="This function retrieves Semantic Scholar data for
+a keyword search — S2_search_papers" />
+<meta property="og:description" content="This function retrieves Semantic Scholar data for
+a keyword search" />
 
 
 
@@ -108,27 +111,50 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Attribution</h1>
+    <h1>This function retrieves Semantic Scholar data for
+a keyword search</h1>
     <small class="dont-index">Source: <a href='https://github.com/KTH-Library/semanticscholar/blob/master/R/api.R'><code>R/api.R</code></a></small>
-    <div class="hidden name"><code>S2_attribution.Rd</code></div>
+    <div class="hidden name"><code>S2_search_papers.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Use this attribution whenever data from the API is publicly displayed</p>
+    <p>This function retrieves Semantic Scholar data for
+a keyword search</p>
     </div>
 
-    <pre class="usage"><span class='fu'>S2_attribution</span><span class='op'>(</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>S2_search_papers</span><span class='op'>(</span><span class='va'>keyword</span>, offset <span class='op'>=</span> <span class='fl'>0</span>, limit <span class='op'>=</span> <span class='fl'>10</span>, fields <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>keyword</th>
+      <td><p>string with keywords to search for, supports AND and OR and
+inclusion and exclusion of terms, for example "+Epidemic +Modeling +Canada -COVID"</p></td>
+    </tr>
+    <tr>
+      <th>offset</th>
+      <td><p>integer paging offset</p></td>
+    </tr>
+    <tr>
+      <th>limit</th>
+      <td><p>integer paging length</p></td>
+    </tr>
+    <tr>
+      <th>fields</th>
+      <td><p>extra fields to include, for example "title,authors"</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Semantic Scholar provides a RESTful API for convenient linking
-to Semantic Scholar pages and pulling information about individual records
-on demand. When publicly displaying data from this API,
-please incorporate the Semantic Scholar name and logo and point back to
-Semantic Scholar at https://www.semanticscholar.org/ with
-a utm_source=api UTM parameter.</p>
+    <p>list representing paper objects</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+ <span class='fu'>S2_search_papers</span><span class='op'>(</span>keyword <span class='op'>=</span> <span class='st'>"literature graph"</span><span class='op'>)</span>
+ <span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -1,7 +1,7 @@
 Package: semanticscholar
 Type: Package
 Title: Data From Semantic Scholar Leightweight API
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person(given = "Markus",
            family = "Skyttner",

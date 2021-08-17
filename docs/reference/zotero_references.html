@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Attribution — S2_attribution • semanticscholar</title>
+<title>References for zotero — zotero_references • semanticscholar</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Attribution — S2_attribution" />
-<meta property="og:description" content="Use this attribution whenever data from the API is publicly displayed" />
+<meta property="og:title" content="References for zotero — zotero_references" />
+<meta property="og:description" content="Given a vector of identifiers, extract data for use in Zotero" />
 
 
 
@@ -108,27 +108,44 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Attribution</h1>
-    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/semanticscholar/blob/master/R/api.R'><code>R/api.R</code></a></small>
-    <div class="hidden name"><code>S2_attribution.Rd</code></div>
+    <h1>References for zotero</h1>
+    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/semanticscholar/blob/master/R/zotero_references.R'><code>R/zotero_references.R</code></a></small>
+    <div class="hidden name"><code>zotero_references.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Use this attribution whenever data from the API is publicly displayed</p>
+    <p>Given a vector of identifiers, extract data for use in Zotero</p>
     </div>
 
-    <pre class="usage"><span class='fu'>S2_attribution</span><span class='op'>(</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>zotero_references</span><span class='op'>(</span><span class='va'>identifiers</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>identifiers</th>
+      <td><p>a character vector of identifiers</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>a list with results</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Semantic Scholar provides a RESTful API for convenient linking
-to Semantic Scholar pages and pulling information about individual records
-on demand. When publicly displaying data from this API,
-please incorporate the Semantic Scholar name and logo and point back to
-Semantic Scholar at https://www.semanticscholar.org/ with
-a utm_source=api UTM parameter.</p>
+    <p>See https://github.com/giocomai/zoteroR for working with Zotero from R</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/humaniformat/man/parse_names.html'>parse_names</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
+ <span class='va'>ids</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"10.1038/nrn3241"</span>, <span class='st'>"CorpusID:37220927"</span><span class='op'>)</span>
+ <span class='fu'>zotero_references</span><span class='op'>(</span><span class='va'>ids</span><span class='op'>)</span>
+ <span class='op'>}</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
