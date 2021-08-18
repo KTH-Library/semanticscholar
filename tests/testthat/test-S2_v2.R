@@ -8,7 +8,7 @@ test_that("Paper search includes a set of fields", {
   res <- S2_search_papers("covid", fields = "url,abstract,authors")
   n_authors <- vapply(res$data$authors, nrow, integer(1))
   has_fields <- all(c("url", "abstract", "authors") %in% names(res$data))
-  is_valid <- (n_authors > 0) && has_fields
+  is_valid <- all(n_authors > 0) && has_fields
   expect_true(is_valid)
 })
 
