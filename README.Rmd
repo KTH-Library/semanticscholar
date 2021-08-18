@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![R-CMD-check](https://github.com/KTH-Library/semanticscholar/workflows/R-CMD-check/badge.svg)](https://github.com/KTH-Library/semanticscholar/actions)
 <!-- badges: end -->
 
 The goal of `semanticscholar` is to offer data access to data from Semantic Scholar through their lightweight API which can provide data on publications and authors. Semantic Scholar is a free, non-profit academic search and discovery engine whose mission is to empower researchers.

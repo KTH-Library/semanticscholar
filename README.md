@@ -7,6 +7,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![R-CMD-check](https://github.com/KTH-Library/semanticscholar/workflows/R-CMD-check/badge.svg)](https://github.com/KTH-Library/semanticscholar/actions)
 <!-- badges: end -->
 
 The goal of `semanticscholar` is to offer data access to data from
@@ -62,13 +63,13 @@ papers <-
 papers %>% head(5) %>% knitr::kable()
 ```
 
-| title                                                                                               | year |
-|:----------------------------------------------------------------------------------------------------|-----:|
-| Optimal Multiple Surface Segmentation With Shape and Context Priors                                 | 2013 |
-| Optimal Co-Segmentation of Tumor in PET-CT Images With Context Information                          | 2013 |
-| Error-Tolerant Scribbles Based Interactive Image Segmentation                                       | 2014 |
-| Dimensional music emotion recognition by valence-arousal regression                                 | 2016 |
-| MASCG: Multi-Atlas Segmentation Constrained Graph method for accurate segmentation of hip CT images | 2015 |
+| title                                                                                                                                           | year |
+|:------------------------------------------------------------------------------------------------------------------------------------------------|-----:|
+| Artificial Intelligence Distinguishes COVID-19 from Community Acquired Pneumonia on Chest CT                                                    | 2020 |
+| Using Artificial Intelligence to Detect COVID-19 and Community-acquired Pneumonia Based on Pulmonary CT: Evaluation of the Diagnostic Accuracy. | 2020 |
+| Optimal Multiple Surface Segmentation With Shape and Context Priors                                                                             | 2013 |
+| Optimal Co-Segmentation of Tumor in PET-CT Images With Context Information                                                                      | 2013 |
+| Error-Tolerant Scribbles Based Interactive Image Segmentation                                                                                   | 2014 |
 
 ``` r
 # get data from several identifiers for importing into Zotero
@@ -80,10 +81,10 @@ my_refs <- zotero_references(ids)
 my_refs[[1]]$journalArticle %>% glimpse()
 #> Rows: 1
 #> Columns: 6
-#> $ title            <chr> "The origin of extracellular fields and currents — E…
+#> $ title            <chr> "The origin of extracellular fields and currents — EE…
 #> $ DOI              <chr> "10.1038/nrn3241"
-#> $ URL              <chr> "https://www.semanticscholar.org/paper/da82f8e6ff009…
-#> $ abstractNote     <chr> "Neuronal activity in the brain gives rise to transm…
+#> $ URL              <chr> "https://www.semanticscholar.org/paper/da82f8e6ff0094…
+#> $ abstractNote     <chr> "Neuronal activity in the brain gives rise to transme…
 #> $ publicationTitle <chr> "Nature Reviews Neuroscience"
 #> $ date             <int> 2012
 my_refs[[2]]$creators %>% knitr::kable()
