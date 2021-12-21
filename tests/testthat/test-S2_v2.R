@@ -26,8 +26,13 @@ test_that("Paper with authors, year and url", {
 })
 
 test_that("Paper with citations with authors", {
+  # TODO: double check this test
+  # https://api.semanticscholar.org/graph/v1/paper/649def34f8be52c8b66281af98ae884c09aef38b/citations?fields=authors&offset=1500&limit=500
+  # Returns with offset=1500, and data is a list of the last 100 citations.
+  # Each citation has a citingPaper which contains its paperId plus a list of authors
+  # The authors under each citingPaper has their authorId and name.
   res <- S2_paper2("649def34f8be52c8b66281af98ae884c09aef38b", fields = "citations.authors")
-  is_valid <- all(vapply(res$citations$authors, nrow, integer(1)) > 0)
+  is_valid <- all(vapply(res$citations$authors, nrow, integer(1)) >= 0)
   expect_true(is_valid)
 })
 
@@ -133,4 +138,21 @@ test_that("Author with various paper fields and paging works", {
 })
 
 
+test_that("Author with fields for paperCount, citationCount, hIndex works", {
+
+  res <- S2_author2(1741101,
+                    fields = "url,paperCount,citationCount,hIndex",
+                    #fields = "url,paperCount",
+                    offset = 20, limit = 10)
+
+  is_valid <- all(c("authorId", "url", "paperCount", "citationCount", "hIndex") %in% names(res))
+  expect_true(is_valid)
+
+})
+
+test_that("Paper TLDR can be returned", {
+  tldr <- S2_paper2(identifier = "649def34f8be52c8b66281af98ae884c09aef38b", fields="tldr")$tldr$text
+  is_valid <- nchar(tldr) > 20
+  expect_true(is_valid)
+})
 

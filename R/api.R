@@ -372,6 +372,10 @@ name
 aliases
 affiliations
 homepage
+homepage
+paperCount
+citationCount
+hIndex
 papers
 papers.paperId
 papers.externalIds
@@ -471,7 +475,9 @@ references.title
 references.venue
 references.year
 references.authors
-embedding"))
+embedding
+tldr
+"))
 }
 
 S2_paper_authors_fields <- function() {

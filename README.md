@@ -55,6 +55,19 @@ authors <- paper$authors
 author_ids <- authors$authorId
 author <- S2_author(author_ids[1])
 
+# get just paper count, citation count and hIndex for a specific author
+countz <- S2_author2(author_ids[1], fields = "url,paperCount,citationCount,hIndex")
+countz %>% dplyr::as_tibble()
+#> # A tibble: 1 × 5
+#>   authorId url                                   paperCount citationCount hIndex
+#>   <chr>    <chr>                                      <int>         <int>  <int>
+#> 1 3324024  https://www.semanticscholar.org/auth…         31          1127     12
+
+# for a specific paper, get the TLDR;
+
+S2_paper2(identifier = "649def34f8be52c8b66281af98ae884c09aef38b", fields="tldr")$tldr$text
+#> [1] "This paper reduces literature graph construction into familiar NLP tasks, point out research challenges due to differences from standard formulations of these tasks, and report empirical results for each task."
+
 # list some of the papers
 papers <- 
   author$papers %>% 
@@ -63,13 +76,13 @@ papers <-
 papers %>% head(5) %>% knitr::kable()
 ```
 
-| title                                                                                                                                           | year |
-|:------------------------------------------------------------------------------------------------------------------------------------------------|-----:|
-| Artificial Intelligence Distinguishes COVID-19 from Community Acquired Pneumonia on Chest CT                                                    | 2020 |
-| Using Artificial Intelligence to Detect COVID-19 and Community-acquired Pneumonia Based on Pulmonary CT: Evaluation of the Diagnostic Accuracy. | 2020 |
-| Optimal Multiple Surface Segmentation With Shape and Context Priors                                                                             | 2013 |
-| Optimal Co-Segmentation of Tumor in PET-CT Images With Context Information                                                                      | 2013 |
-| Error-Tolerant Scribbles Based Interactive Image Segmentation                                                                                   | 2014 |
+| title                                                                                        | year |
+|:---------------------------------------------------------------------------------------------|-----:|
+| Artificial Intelligence Distinguishes COVID-19 from Community Acquired Pneumonia on Chest CT | 2020 |
+| Optimal Multiple Surface Segmentation With Shape and Context Priors                          | 2013 |
+| Optimal Co-Segmentation of Tumor in PET-CT Images With Context Information                   | 2013 |
+| Error-Tolerant Scribbles Based Interactive Image Segmentation                                | 2014 |
+| Automated anatomical labeling of coronary arteries via bidirectional tree LSTMs              | 2018 |
 
 ``` r
 # get data from several identifiers for importing into Zotero
