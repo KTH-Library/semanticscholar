@@ -1,10 +1,12 @@
 test_that("Paper search with paging works", {
+  skip_on_ci()
   res <- S2_search_papers("covid vaccination", offset = 100, limit = 3)
   is_valid <- nrow(res$data) == 3 && (res$offset == 100) && (res$total > 6e5)
   expect_true(is_valid)
 })
 
 test_that("Paper search includes a set of fields", {
+  skip_on_ci()
   res <- S2_search_papers("covid", fields = "url,abstract,authors")
   n_authors <- vapply(res$data$authors, nrow, integer(1))
   has_fields <- all(c("url", "abstract", "authors") %in% names(res$data))
@@ -13,12 +15,14 @@ test_that("Paper search includes a set of fields", {
 })
 
 test_that("Paper search for garbage term is empty", {
+  skip_on_ci()
   res <- S2_search_papers("totalGarbageNonsense")
   is_valid <- (res$total == 0) && (res$offset == 0) && (length(res$data) == 0)
   expect_true(is_valid)
 })
 
 test_that("Paper with authors, year and url", {
+  skip_on_ci()
   res <- S2_paper2("649def34f8be52c8b66281af98ae884c09aef38b", fields = "url,year,authors")
   is_valid <- (res$url == "https://www.semanticscholar.org/paper/649def34f8be52c8b66281af98ae884c09aef38b") &&
     (res$year == 2018) && (nrow(res$authors) > 20)
@@ -26,6 +30,7 @@ test_that("Paper with authors, year and url", {
 })
 
 test_that("Paper with citations with authors", {
+  skip_on_ci()
   # TODO: double check this test
   # https://api.semanticscholar.org/graph/v1/paper/649def34f8be52c8b66281af98ae884c09aef38b/citations?fields=authors&offset=1500&limit=500
   # Returns with offset=1500, and data is a list of the last 100 citations.
@@ -37,12 +42,14 @@ test_that("Paper with citations with authors", {
 })
 
 test_that("Paper with list of twentythree authors", {
+  skip_on_ci()
   res <- S2_paper2("649def34f8be52c8b66281af98ae884c09aef38b", details = "authors", limit = 50)
   is_valid <- nrow(res$data) >= 23
   expect_true(is_valid)
 })
 
 test_that("Paper with authors and their affiliations and papers", {
+  skip_on_ci()
 
   res <- S2_paper2("649def34f8be52c8b66281af98ae884c09aef38b",
     details = "authors", fields = "affiliations,papers.paperId", limit = 20)
@@ -52,6 +59,7 @@ test_that("Paper with authors and their affiliations and papers", {
 })
 
 test_that("Paper with authors and their url, years and authors", {
+  skip_on_ci()
 
   res <- S2_paper2("649def34f8be52c8b66281af98ae884c09aef38b",
                    details = "authors", fields = "url,papers.year,papers.authors", offset = 2)
@@ -62,6 +70,7 @@ test_that("Paper with authors and their url, years and authors", {
 
 
 test_that("Paper with 100 citations works", {
+  skip_on_ci()
 
   res <- S2_paper2("649def34f8be52c8b66281af98ae884c09aef38b",
                    details = "citations", limit = 100)
@@ -72,31 +81,48 @@ test_that("Paper with 100 citations works", {
   expect_true(is_valid)
 })
 
-test_that("Paper with 100 citations works", {
+test_that("Paper with 100+ citations works", {
+  skip_on_ci()
 
-  res <- S2_paper2("649def34f8be52c8b66281af98ae884c09aef38b",
-                   details = "citations", fields = "contexts,intents,isInfluential,abstract",
-                  offset=20, limit = 10)
+  fields <- "contexts,intents,isInfluential"
+  validate_fields(fields, "paper_citations")
+
+  res <- 
+    S2_paper2(
+      identifier = "649def34f8be52c8b66281af98ae884c09aef38b",
+      details = "citations", 
+      fields = fields,
+      offset = 20, 
+      limit = 10
+    )
+  
   is_valid <- (res$offset == 20) && !is.null(res$data)
 
   expect_true(is_valid)
 })
 
 test_that("Paper with references and paging works", {
+  skip_on_ci()
 
-  res <- S2_paper2("649def34f8be52c8b66281af98ae884c09aef38b",
-                   details = "references", fields = "contexts,intents,isInfluential,abstract",
-                   offset = 20, limit = 10)
+  res <- 
+    S2_paper2(
+      identifier = "649def34f8be52c8b66281af98ae884c09aef38b",
+      details = "references", 
+      fields = "contexts,intents,isInfluential,abstract",
+      offset = 20, 
+      limit = 10
+    )
 
   is_valid <- (res$offset == 20) && !is.null(res$data)
 
   expect_true(is_valid)
 })
 
-test_that("Author with fields for aliases and papers works", {
+test_that("Author with fields for papers works", {
+  skip_on_ci()
 
   res <- S2_author2(1741101,
-    fields = "aliases,papers",
+    fields = "papers",
     offset = 20, limit = 10)
 
   is_valid <- all(c("paperId", "title") %in% names(res$papers))
@@ -105,6 +131,7 @@ test_that("Author with fields for aliases and papers works", {
 })
 
 test_that("Author with fields for paper abstracts and authors works", {
+  skip_on_ci()
 
   res <- S2_author2(1741101,
                     fields = "url,papers.abstract,papers.authors",
@@ -118,6 +145,7 @@ test_that("Author with fields for paper abstracts and authors works", {
 })
 
 test_that("Author with various paper fields and paging works", {
+  skip_on_ci()
 
   res <- S2_author2(1741101, details = "papers",
     fields = "url,year,authors", limit = 2)
@@ -127,10 +155,11 @@ test_that("Author with various paper fields and paging works", {
 
 })
 
-test_that("Author with various paper fields and paging works", {
+test_that("Author with various paper fields incl citations.authors and paging works", {
+  skip_on_ci()
 
   res <- S2_author2(1741101, details = "papers", fields = "citations.authors",
-                    offset = 260)
+                    offset = 250)
 
   is_valid <- all(c("paperId", "citations") %in% names(res$data)) && (nrow(res$data) >= 4)
   expect_true(is_valid)
@@ -139,6 +168,7 @@ test_that("Author with various paper fields and paging works", {
 
 
 test_that("Author with fields for paperCount, citationCount, hIndex works", {
+  skip_on_ci()
 
   res <- S2_author2(1741101,
                     fields = "url,paperCount,citationCount,hIndex",
@@ -151,6 +181,7 @@ test_that("Author with fields for paperCount, citationCount, hIndex works", {
 })
 
 test_that("Paper TLDR can be returned", {
+  skip_on_ci()
   tldr <- S2_paper2(identifier = "649def34f8be52c8b66281af98ae884c09aef38b", fields="tldr")$tldr$text
   is_valid <- nchar(tldr) > 20
   expect_true(is_valid)

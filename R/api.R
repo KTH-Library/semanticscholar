@@ -1,6 +1,21 @@
 #file.edit("~/.Renviron")
 #readRenviron("~/.Renviron")
 
+# author/batch
+# author/search
+# author/{author_id}
+# paper/autocomplete?query={query}
+# paper/batch
+# paper/search
+# paper/search/bulk
+# paper/{author_id}/papers
+# paper/{paper_id}
+# paper/{paper_id}/authors
+# paper/{paper_id}/citations
+# paper/{paper_id}/references
+# /recommendations/v1/papers/
+# /recommendations/v1/papers/forpaper/{paper_id}
+
 cfg <- function() {
 
   res <- list(
@@ -10,7 +25,7 @@ cfg <- function() {
 
   if (Sys.getenv("SEMANTICSCHOLAR_API") != "") {
     res$S2_key <- Sys.getenv("SEMANTICSCHOLAR_API")
-    res$S2_api <- "https://partner.semanticscholar.org/"
+    res$S2_api <- "https://api.semanticscholar.org/"
     res$S2_ratelimit <- 1 / (100 - 1) # for approx 100 requests per second
   }
 
@@ -49,7 +64,7 @@ S2_ratelimit <- function()
 #' @export
 S2_attribution <- function() {
   sprintf(
-    "Data source: Semantic Scholar API\n%s?utm_source=api\n%s", S2_api(), "\n",
+    "Data source: Semantic Scholar API\n%s?utm_source=api\n%s", S2_api(),
     "Data license agreement: http://s2-public-api-prod.us-west-2.elasticbeanstalk.com/license/")
 }
 
@@ -92,10 +107,10 @@ S2_paper <- function(identifier, include_unknown_refs = FALSE) {
 
   if (!is.null(key) && nchar(key) > 10) {
     res <- httr::GET(url = api, httr::add_headers(`x-api-key` = key),
-      path = sprintf("v1/paper/%s", identifier), query = q)
+      path = sprintf("graph/v1/paper/%s", identifier), query = q)
   } else {
     res <- httr::GET(url = api,
-      path = sprintf("v1/paper/%s", identifier), query = q)
+      path = sprintf("graph/v1/paper/%s", identifier), query = q)
   }
 
   if (status_code(res) == 200) {
@@ -103,12 +118,13 @@ S2_paper <- function(identifier, include_unknown_refs = FALSE) {
       httr::content(res, as = "text", encoding = "utf-8"),
       simplifyDataFrame = TRUE
     )
-    class(res$references) <- c("tbl_df", "tbl", "data.frame")
+    res <- as.data.frame(res)
+    class(res) <- c("tbl_df", "tbl", "data.frame")
     return(res)
   }
 
   if (status_code(res) == 429)
-    stop("HTTP status 429 Too Many Requests (> 100 in 5 mins). Please wait 5 minutes.")
+    stop("HTTP status 429 Too Many Requests. Please wait before trying again.")
 
   stop("HTTP status", status_code(res))
 
@@ -144,10 +160,10 @@ S2_author <- function(S2AuthorId) {
 
   if (!is.null(key) && nchar(key) > 10) {
     res <- httr::GET(url = api, httr::add_headers(`x-api-key` = key),
-                     path = sprintf("v1/author/%s", identifier))
+                     path = sprintf("graph/v1/author/%s", identifier))
   } else {
     res <- httr::GET(url = S2_api(),
-                     path = sprintf("v1/author/%s", identifier))
+                     path = sprintf("graph/v1/author/%s", identifier))
   }
 
   if (status_code(res) == 200)
@@ -453,20 +469,28 @@ citationCount
 influentialCitationCount
 isOpenAccess
 fieldsOfStudy
+s2FieldsOfStudy
+publicationDate
 authors
 authors.authorId
 authors.externalIds
 authors.url
 authors.name
-authors.aliases
 authors.affiliations
 authors.homepage
+authors.paperCount
+authors.citationCount
+authors.hIndex
 citations
 citations.paperId
 citations.url
 citations.title
+citations.abstract
 citations.venue
 citations.year
+citations.referenceCount
+citations.influentialCitationCount
+citations.isOpenAccess
 citations.authors
 references
 references.paperId
@@ -474,6 +498,10 @@ references.url
 references.title
 references.venue
 references.year
+references.referenceCount
+references.citationCount
+references.influentialCitationCount
+references.isOpenAccess
 references.authors
 embedding
 tldr
@@ -485,9 +513,11 @@ S2_paper_authors_fields <- function() {
 externalIds
 url
 name
-aliases
 affiliations
 homepage
+paperCount
+citationCount
+hIndex  
 papers
 papers.paperId
 papers.externalIds
@@ -501,6 +531,8 @@ papers.citationCount
 papers.influentialCitationCount
 papers.isOpenAccess
 papers.fieldsOfStudy
+papers.s2FieldsOfStudy
+papers.publicationDate
 papers.authors"))
 }
 
@@ -509,35 +541,37 @@ S2_paper_citations_fields <- function() {
 intents
 isInfluential
 externalIds
-url
-title
-abstract
-venue
-year
-referenceCount
-citationCount
-influentialCitationCount
-isOpenAccess
-fieldsOfStudy
-authors"))
+citingpaper.url
+citingpaper.title
+citingpaper.abstract
+citingpaper.venue
+citingpaper.year
+citingpaper.referenceCount
+citingpaper.citationCount
+citingpaper.influentialCitationCount
+citingpaper.isOpenAccess
+citingpaper.fieldsOfStudy
+citingpaper.authors"))
 }
 
 S2_paper_references_fields <- function() {
   readLines(textConnection("contexts
 intents
 isInfluential
-externalIds
-url
-title
-abstract
-venue
-year
-referenceCount
-citationCount
-influentialCitationCount
-isOpenAccess
-fieldsOfStudy
-authors"))
+citedPaper.externalIds
+citedPaper.url
+citedPaper.title
+citedPaper.abstract
+citedPaper.venue
+citedPaper.year
+citedPaper.referenceCount
+citedPaper.citationCount
+citedPaper.influentialCitationCount
+citedPaper.isOpenAccess
+citedPaper.fieldsOfStudy
+citedPaper.s2FieldsOfStudy
+citedPaper.publicationDate
+citedPaper.authors"))
 }
 
 validate_fields <- function(fields,
@@ -588,4 +622,39 @@ S2_fields <- function() {
     paper_references = S2_paper_references_fields()
   )
 }
+
+# S2_releases <- function() {
+#   "https://api.semanticscholar.org/datasets/v1/release" |> 
+#     httr::GET() |> 
+#     httr::content() |> 
+#     unlist() |> sort(TRUE) |> 
+#     tibble::as_tibble_col("release")
+# }
+
+# S2_release_datasets <- function(release_id) {
+#   res <- 
+#     "https://api.semanticscholar.org/datasets/v1/release/%s" |>
+#     sprintf(release_id) |> 
+#     httr::GET() |> 
+#     httr::content()
+
+#   dplyr::bind_cols(
+#     release_id = res$release_id, 
+#     res$datasets  |> purrr::map_df(tibble::as_tibble) |> 
+#       dplyr::rename(dataset_name = "name")
+#   ) 
+  
+# }
+
+# S2_dataset_urls <- function(release_id, dataset_name) {
+
+#   res <- 
+#     "https://api.semanticscholar.org/datasets/v1/release/%s/dataset/%s" |> 
+#     sprintf(release_id, dataset_name) |> 
+#     httr::GET() |> 
+#     httr::content()
+
+#   res
+
+# }
 

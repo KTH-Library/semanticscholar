@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![R-CMD-check](https://github.com/KTH-Library/semanticscholar/workflows/R-CMD-check/badge.svg)](https://github.com/KTH-Library/semanticscholar/actions)
+[![R-CMD-check](https://github.com/KTH-Library/semanticscholar/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/KTH-Library/semanticscholar/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of `semanticscholar` is to offer data access to data from Semantic Scholar through their lightweight API which can provide data on publications and authors. Semantic Scholar is a free, non-profit academic search and discovery engine whose mission is to empower researchers.
@@ -43,38 +43,25 @@ suppressPackageStartupMessages(library(purrr))
 library(knitr)
 
 # get a paper using an identifier
-paper <- S2_paper("arXiv:1705.10311", include_unknown_refs = TRUE)
+paper <- S2_paper2("arXiv:1705.10311", details = "authors")
 
 # authors on that paper
-authors <- paper$authors
+authors <- paper$data
 
 # for one of the authors
 author_ids <- authors$authorId
-author <- S2_author(author_ids[1])
+Sys.sleep(1)
+author <- S2_author2(author_ids[1])
 
 # get just paper count, citation count and hIndex for a specific author
+Sys.sleep(1)
 countz <- S2_author2(author_ids[1], fields = "url,paperCount,citationCount,hIndex")
-countz %>% dplyr::as_tibble()
+countz |> dplyr::as_tibble()
 
 # for a specific paper, get the TLDR;
 
+Sys.sleep(1)
 S2_paper2(identifier = "649def34f8be52c8b66281af98ae884c09aef38b", fields="tldr")$tldr$text
-
-# list some of the papers
-papers <- 
-  author$papers %>% 
-  select(title, year)
-
-papers %>% head(5) %>% knitr::kable()
-
-# get data from several identifiers for importing into Zotero
-ids <- c("10.1038/nrn3241", "CorpusID:37220927")
-my_refs <- zotero_references(ids)
-
-# this data can now be imported via the Zetero API using https://github.com/giocomai/zoteroR
-# showing data form the first record
-my_refs[[1]]$journalArticle %>% glimpse()
-my_refs[[2]]$creators %>% knitr::kable()
 
 ```
 
