@@ -1,7 +1,7 @@
 Package: semanticscholar
 Type: Package
 Title: Data From Semantic Scholar Leightweight API
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
     person(given = "Markus",
            family = "Skyttner",
@@ -27,6 +27,6 @@ Imports:
     rlang,
     purrr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.2
 Suggests: 
     testthat
