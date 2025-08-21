@@ -124,7 +124,7 @@ S2_paper <- function(identifier, include_unknown_refs = FALSE) {
   }
 
   if (status_code(res) == 429)
-    stop("HTTP status 429 Too Many Requests (> 100 in 5 mins). Please wait 5 minutes.")
+    stop("HTTP status 429 Too Many Requests. Please wait before trying again.")
 
   stop("HTTP status", status_code(res))
 
